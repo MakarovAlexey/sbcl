@@ -678,4 +678,12 @@
                                (class :allocation :class :initform :ok))))
                      (slot-value o 'instance))))))
 
+
+(with-test (:name :bug-496726)
+  (let ((class (defclass bug-496726 ()
+                 ((slot1 :accessor slot1-of)))))
+    (finalize-inheritance class)
+    (let ((slot (first (class-slots class))))
+      (assert (not (null (first (slot-definition-readers slot)))))
+      (assert (not (null (first (slot-definition-writers slot))))))))
 ;;;; success

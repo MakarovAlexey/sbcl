@@ -1179,7 +1179,11 @@
          (documentationp nil)
          (namep  nil)
          (initp  nil)
-         (allocp nil))
+         (allocp nil)
+         (readers nil)
+         (readersp nil)
+         (writers nil)
+         (writersp nil))
 
     (dolist (slotd direct-slotds)
       (when slotd
@@ -1199,6 +1203,12 @@
           (setq allocation (slot-definition-allocation slotd)
                 allocation-class (slot-definition-class slotd)
                 allocp t))
+        (unless readersp
+          (setq readers (slot-definition-readers slotd)
+                readersp t))
+        (unless writersp
+          (setq writers (slot-definition-writers slotd)
+                writersp t))
         (setq initargs (append (slot-definition-initargs slotd) initargs))
         (let ((slotd-type (slot-definition-type slotd)))
           (setq type (cond
@@ -1217,7 +1227,9 @@
           :allocation-class allocation-class
           :type type
           :class class
-          :documentation documentation)))
+          :documentation documentation
+          :readers readers
+          :writers writers)))
 
 (defmethod compute-effective-slot-definition-initargs :around
     ((class structure-class) direct-slotds)
